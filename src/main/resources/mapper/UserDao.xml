@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.dao.UserDao">
+    <select id="getAllUser" resultType="com.qianfeng.bean.User">
+        select * from userinfo where status = 1
+    </select>
+
+    <insert id="saveUser">
+        insert into userinfo values(default,#{username},#{password},#{account},#{email},#{mobile},#{areaCode},#{status},#{icon})
+    </insert>
+
+    <select id="getUserById" resultType="com.qianfeng.bean.User">
+        select * from userinfo where userid = #{userid}
+    </select>
+
+    <select id="getUserByuserName" resultType="com.qianfeng.bean.User">
+        select * from userinfo where username = #{username}
+    </select>
+
+    <select id="getUserByuserNameAndPassword" resultType="com.qianfeng.bean.User">
+        select * from userinfo where username=#{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+    </select>
+    
+    <delete id="deleteUser" >
+        update userinfo set status = 0 where userid = #{userid}
+    </delete>
+
+    <update id="updateUser">
+        update userinfo set account=#{account},
+         email = #{email},mobile=#{mobile},areaCode=#{areaCode},status=#{status}
+         where userid = #{userid}
+    </update>
+
+    <select id="selectData" resultType="com.qianfeng.bean.User">
+        select * from userinfo
+        <where>
+            <if test="username != null and username != ''">
+                and username like '%${username}%'
+            </if>
+            <if test="username != null and username != ''">
+                and account like '%${account}%'
+            </if>
+        </where>
+    </select>
+
+    <update id="deleteCheckUser" parameterType="com.qianfeng.dto.UserIdsDTO">
+        update userinfo set status = 0 where userid in
+        <foreach collection="userids" item="item" open="(" separator="," close=")">
+         #{item}
+         </foreach>
+    </update>
+
+    <insert id="insertUser">
+        insert into userinfo values(default,#{username},#{password},#{account},#{email},#{mobile},
+        #{areaCode},#{status},null)
+    </insert>
+
+    <resultMap id="userInfoMap" type="com.qianfeng.bean.MenuInfo">
+        <id column="pid" property="mid"></id>
+        <result column="pname" property="menuName"></result>
+        <result column="picon" property="menuIcon"></result>
+        <result column="purl" property="menuUrl"></result>
+        <collection property="childMenus" ofType="com.qianfeng.bean.MenuInfo">
+            <id column="mid" property="mid"></id>
+            <result column="menuname" property="menuName"></result>
+            <result column="menuicon" property="menuIcon"></result>
+            <result column="menu_url" property="menuUrl"></result>
+            <result column="parentid" property="parentId"></result>
+        </collection>
+    </resultMap>
+
+    <!--用户登录所需菜单信息-->
+    <select id="userLoginInit" resultMap="userInfoMap" parameterType="com.qianfeng.bean.User">
+        select m.mid pid,m.menuname pname,m.menuicon picon,m.menu_url purl,tb1.* from menuinfo m RIGHT JOIN
+        (select m.* from userinfo u,user_role ur,roleinfo r,role_menu rm,menuinfo m
+        where u.username = #{username} and u.`password` = #{password} and ur.userid = u.userid and r.roleid = ur.roleid
+        and rm.roleid = r.roleid and m.mid = rm.mid and u.status = 1 and parentid is not null order by mid) tb1
+        on m.mid = tb1.parentid
+    </select>
+
+    <select id="getgarbageType" resultType="com.qianfeng.vo.Garbage">
+        select * from garbage where name like '%${name}%'
+    </select>
+
+    <select id="getAll" resultType="com.qianfeng.bean.Fruits">
+        select * from fruits
+    </select>
+</mapper>

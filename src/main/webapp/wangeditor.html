@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>wangeditordemo</title>
+    <link href="wangeditor/wangEditor.min.css"/>
+    <script src="wangeditor/wangEditor.min.js"></script>
+    <script src="jquery/jquery-2.1.1.min.js"></script>
+    <style>
+        .wangEditor-container .wangEditor-txt blockquote {
+            display: block;
+            border-left: 8px solid #d0e5f2;
+            padding: 5px 10px;
+            margin: 10px 0;
+            line-height: 1.4;
+            font-size: 100%;
+            background-color: #f1f1f1;
+        }
+        .wangEditor-container .wangEditor-txt table {
+            border: none;
+            border-collapse: collapse;
+        }
+        .wangEditor-container .wangEditor-txt table td,
+        .wangEditor-container .wangEditor-txt table th {
+            border: 1px solid #f1f1f1;
+            padding: 3px 5px;
+            min-width: 50px;
+            height: 20px;
+        }
+        .wangEditor-container .wangEditor-txt pre {
+            border: 1px solid #ccc;
+            background-color: #f8f8f8;
+            padding: 10px;
+            margin: 5px 0px;
+            font-size: 0.8em;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<div id="editor"></div>
+<input type="button" id="test1" value="拿html"/>
+<input type="button" id="test2" value="拿text"/>
+<script>
+    var E = window.wangEditor;
+    //声明
+    var editor = new E("#editor");
+    //设置
+    //开启debug模式
+    editor.customConfig.debug = true;
+    // 关闭粘贴内容中的样式
+    editor.customConfig.pasteFilterStyle = false;
+    // 忽略粘贴内容中的图片
+    editor.customConfig.pasteIgnoreImg = false;
+    // 使用 base64 保存图片
+    //editor.customConfig.uploadImgShowBase64 = true
+    // 上传图片到服务器
+    editor.customConfig.uploadFileName = "editorFile"; //设置文件上传的参数名称
+    editor.customConfig.uploadImgServer = 'wangeditor/upload1'; //设置上传文件的服务器路径
+    editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; // 将图片大小限制为 3M
+    editor.customConfig.uploadImgTimeout = 50000;
+    //取消网络图片的配置
+    editor.customConfig.hideLinkImg = true;
+    //自定义上传图片事件
+    editor.customConfig.uploadImgHooks = {
+        before: function(xhr, editor, files) {
+
+        },
+        success: function(xhr, editor, result) {
+            console.log("上传成功");
+        },
+        fail: function(xhr, editor, result) {
+            console.log("上传失败,原因是" + result);
+        },
+        error: function(xhr, editor) {
+            console.log("上传出错");
+        },
+        timeout: function(xhr, editor) {
+            console.log("上传超时");
+        }
+    }
+
+    //初始化
+    editor.create();
+    $("#editor").attr('style','height: 100%;width: auto;');
+
+
+    //js（早绑定/晚绑定）
+    //获取html
+    $("#test1").bind("click",function(){
+        alert(editor.txt.html());
+    });
+    //获取文本
+    $("#test2").bind("click",function(){
+        alert(editor.txt.text());
+    });
+</script>
+</body>
+</html>

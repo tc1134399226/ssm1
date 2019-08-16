@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="plugins/basic.min.css" />
+    <link rel="stylesheet" href="plugins/dropzone.min.css" />
+    <script src="plugins/dropzone.min.js"></script>
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript" src="jquery/jquery-2.1.1.min.js"></script>
+</head>
+<body>
+<div id="dropzoneDiv" class="dropzone"></div>
+<div class="table-responsive">
+    <table class="table  table-bordered" id = "dataTable">
+        <thead>
+        <tr >
+            <th width="30">#</th>
+            <th>相似度</th>
+            <th>类型</th>
+            <th>关键字</th>
+            <th width="80px">操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+</body>
+<script>
+    Dropzone.options.dropzoneDiv = {
+        url: "fileupload/garbageDiscernController", // 文件提交地址
+        method: "post",  // 也可用put
+        paramName: "dropzFile", // 默认为file
+        maxFiles: 1,// 一次性上传的文件数量上限
+        maxFilesize: 2, // 文件大小，单位：MB
+        acceptedFiles: ".jpg,.gif,.png,.jpeg,.txt,.doc,.docx", // 上传的类型
+        addRemoveLinks: true,
+        parallelUploads: 1,// 一次上传的文件数量
+        //previewsContainer:"#preview", // 上传图片的预览窗口
+        dictDefaultMessage: '拖动文件至此或者点击上传',
+        dictMaxFilesExceeded: "您最多只能上传1个文件！",
+        dictResponseError: '文件上传失败!',
+        dictInvalidFileType: "文件类型只能是*.jpg,*.gif,*.png,*.jpeg,.txt,.doc,.docx。",
+        dictFallbackMessage: "浏览器不受支持",
+        dictFileTooBig: "文件过大上传文件最大支持.",
+        dictRemoveLinks: "删除",
+        dictCancelUpload: "取消",
+        init: function () {
+            this.on("addedfile", function (file) {
+                // 上传文件时触发的事件
+            });
+            this.on("success", function (file, data) {
+                if (data.status==200){
+                    $(data.resultObj.result).each(function(index,item){
+                        console.log(item);
+                        var trStr = "<tbody>";
+                        trStr = "<tr id='tr"+index+"'>";
+                        //获取id并拼接
+                        trStr+="<td>"+index+"</td>";
+                        trStr+="<td>"+item.score+"</td>";
+                        trStr+="<td>"+item.root+"</td>";
+                        trStr+="<td>"+item.keyword+"</td>";
+                        trStr+="<td>";
+                        trStr+="<button type=\"button\" class='btn btn-success btn-xs' onclick='commitsKey(\""+item.keyword+"\")'><i class=' glyphicon glyphicon-globe'></i></button>"
+                        trStr+="</td>";
+                        trStr+="</tr>";
+                        trStr+="</tbody>";
+                        $("#dataTable").append(trStr);
+                    });
+                }
+            });
+            this.on("error", function (file, data) {
+                // 上传失败触发的事件
+            });
+            this.on("removedfile", function (file) {
+                $("#dataTable tbody").empty();
+            });
+        }
+
+    };
+
+    function commitsKey(keyword) {
+        $.ajax({
+            type: "post",
+            url: "garbage/getgarbageType",
+            contentType: "application/json;charset=UTF-8",
+            //接受数据类型
+            dataType: "json",
+            data: JSON.stringify({
+                "name":keyword
+            }),
+            success: function (result) {
+                if (result.type!=null) {
+                    alert(result.type)
+                }
+                else{
+                    alert("暂无分类");
+                }
+
+            },
+            error : function(e){
+                alert("暂无分类");
+            }
+        });
+    }
+</script>
+</html>

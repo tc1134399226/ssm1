@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianfeng.dao.MenuInfoDao">
+    <resultMap id="getMenuParent" type="com.qianfeng.vo.RoleMenuVO">
+        <id column="mid" property="id" ></id>
+        <result column="parentname" property="name"></result>
+        <result column="checked" property="checked"></result>
+        <result column="picon" property="icon"></result>
+        <collection property="children" resultMap="getMenu" javaType="java.util.ArrayList"
+        ofType="com.qianfeng.vo.RoleMenuVO"></collection>
+    </resultMap>
+    <resultMap id="getMenu" type="com.qianfeng.vo.RoleMenuVO">
+        <id column="id" property="id"></id>
+        <result column="menuName" property="name"></result>
+        <result column="parentid" property="pid"></result>
+        <result column="checked" property="checked"></result>
+        <result column="icon" property="icon"></result>
+        <collection property="children" javaType="java.util.ArrayList"
+        ofType="com.qianfeng.vo.RoleMenuVO" resultMap="getMenuChild"></collection>
+    </resultMap>
+    <resultMap id="getMenuChild" type="com.qianfeng.vo.RoleMenuVO">
+        <id column="cid" property="id"></id>
+        <result column="childname" property="name"></result>
+        <result column="cpid" property="pid"></result>
+        <result column="checked" property="checked"></result>
+        <result column="cicon" property="icon"></result>
+    </resultMap>
+
+
+    <select id="listMenuInfoByroleId" resultMap="getMenuParent">
+        select tab1.* from
+        (select m1.mid,m1.menuName parentname,m1.menuIcon picon,m2.mid id,m2.menuName,m2.parentid,m2.menuIcon icon,m3.menuIcon cicon,m3.mid cid,m3.menuName childname,m3.parentid cpid,1 checked from menuinfo m1
+        inner join menuinfo m2 on m2.parentid = m1.mid
+        left join menuinfo m3 on m3.parentid = m2.mid
+        inner join role_menu rm on rm.mid = m1.mid or rm.mid = m2.mid or rm.mid = m3.mid
+        where rm.roleid = #{roleid} and m2.parentid in (select mid from menuinfo where parentid is null)) tab1
+        UNION
+        select tab2.* from
+        (select m1.mid,m1.menuName parentname,m1.menuIcon picon,m2.mid id,m2.menuName,m2.parentid,m2.menuIcon icon,m3.menuIcon cicon,m3.mid cid,m3.menuName childname,m3.parentid cpid,0 checked from menuinfo m1
+        inner join menuinfo m2 on m2.parentid = m1.mid
+        left join menuinfo m3 on m3.parentid = m2.mid
+        inner join role_menu rm on rm.mid = m1.mid or rm.mid = m2.mid or rm.mid = m3.mid
+        where rm.roleid!=#{roleid} and m2.parentid in (select mid from menuinfo where parentid is null)) tab2
+    </select>
+    <resultMap id="getMenuRole" type="com.qianfeng.vo.RoleIdMenuId">
+        <id column="roleid" property="roleid"></id>
+        <collection property="menuInfos" ofType="com.qianfeng.bean.MenuInfo">
+            <id column="mid" property="mid"></id>
+        </collection>
+    </resultMap>
+    <select id="listRoleMenuByRoleId" resultMap="getMenuRole">
+        select * from role_menu where roleid =#{roleId}
+    </select>
+
+    <delete id="deleteRoleMenuById">
+        delete from role_menu where roleid =#{roleId}  and mid = #{menuid}
+    </delete>
+
+    <insert id="addRoleMenuByID">
+        insert into role_menu values(default,#{roleId},#{menuid})
+    </insert>
+
+    <select id="listAllMenuInfo" resultType="com.qianfeng.bean.MenuInfo">
+        select *,menu_url menuUrl from menuinfo
+    </select>
+</mapper>
