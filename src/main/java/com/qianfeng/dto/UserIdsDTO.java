@@ -10,4 +10,11 @@ import java.util.Arrays;
 public class UserIdsDTO {
     private ArrayList<Integer> userids;
 
+    public ArrayList<Integer> getUserids() {
+        return userids;
+    }
+
+    public void setUserids(ArrayList<Integer> userids) {
+        this.userids = userids;
+    }
 }

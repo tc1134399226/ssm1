@@ -18,4 +18,9 @@ public class UserTest implements Serializable {
     @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",message = "邮箱地址不合法")
     String email;
 
+
+    //上传成功
+
+    //上传成功是否
+
 }
