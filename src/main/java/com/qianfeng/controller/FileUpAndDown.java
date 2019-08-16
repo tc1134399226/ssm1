@@ -24,7 +24,7 @@ public class FileUpAndDown {
     @ResponseBody
     public Object fileUpload(MultipartFile dropzFile, HttpServletRequest request){
         System.out.println("upload..........");
-        HashMap<String, String> stringObjectHashMap = new HashMap<>();
+        HashMap<String, String> stringObjectHashMap = new HashMap<String, String>();
         String path = request.getSession().getServletContext().getRealPath("/uploads");
         File file = new File(path);
         // 判断路径是否存在，如果不存在，创建该路径
@@ -43,7 +43,7 @@ public class FileUpAndDown {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        HashMap<String, String> hashMap = new HashMap<>();
+        HashMap<String, String> hashMap = new HashMap<String, String>();
         hashMap.put("filename",file1.toString());
         return  hashMap;
     }
