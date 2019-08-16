@@ -1,9 +1,10 @@
 package com.qianfeng.service.impl;
 
-import com.qf.dao.CommentMapper;
-import com.qf.pojo.CommentInfo;
-import com.qf.service.CommentService;
-import com.qf.vo.CommentVO;
+
+import com.qianfeng.bean.CommentInfo;
+import com.qianfeng.dao.CommentMapper;
+import com.qianfeng.service.CommentService;
+import com.qianfeng.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

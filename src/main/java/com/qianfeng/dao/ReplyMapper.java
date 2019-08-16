@@ -1,7 +1,7 @@
 package com.qianfeng.dao;
 
-import com.qf.pojo.ReplyInfo;
-import com.qf.vo.ReplyVO;
+import com.qianfeng.bean.ReplyInfo;
+import com.qianfeng.vo.ReplyVO;
 
 import java.util.List;
 

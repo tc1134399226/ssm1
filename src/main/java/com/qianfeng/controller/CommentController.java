@@ -2,10 +2,10 @@ package com.qianfeng.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.qf.pojo.CommentInfo;
-import com.qf.pojo.UserInfo;
-import com.qf.service.CommentService;
-import com.qf.vo.CommentVO;
+import com.qianfeng.bean.CommentInfo;
+import com.qianfeng.bean.UserInfo;
+import com.qianfeng.service.CommentService;
+import com.qianfeng.vo.CommentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     @RequestMapping("addComment")
-    public Object addComment(@RequestBody CommentInfo commentInfo ,HttpSession session){
+    public Object addComment(@RequestBody CommentInfo commentInfo , HttpSession session){
         UserInfo user = (UserInfo) session.getAttribute("userInfo");
 //       if (user==null){
 //           return "login";

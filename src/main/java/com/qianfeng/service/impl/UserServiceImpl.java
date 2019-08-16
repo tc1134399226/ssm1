@@ -59,10 +59,14 @@ public class UserServiceImpl implements UserService {
         return i > 0;
     }
 
-    @Override
     public List<User> selectData(User user) {
-        return userDao.selectData(user);
+        return  userDao.selectData(user);
     }
+
+//    @Override
+//    public List<User> selectData(User user) {
+//        return userDao.selectData(user);
+//    }
 
     public boolean deleteUser(UserIdsDTO userIdsDTO){
         for (Integer userid : userIdsDTO.getUserids()) {

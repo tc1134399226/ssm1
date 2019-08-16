@@ -1,9 +1,10 @@
 package com.qianfeng.service.impl;
 
-import com.qf.dao.ReplyMapper;
-import com.qf.pojo.ReplyInfo;
-import com.qf.service.ReplyService;
-import com.qf.vo.ReplyVO;
+
+import com.qianfeng.bean.ReplyInfo;
+import com.qianfeng.dao.ReplyMapper;
+import com.qianfeng.service.ReplyService;
+import com.qianfeng.vo.ReplyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
