@@ -21,6 +21,6 @@ public class UserTest implements Serializable {
 
     //上传成功
 
-    //上传234成功
+    //上传成功是否
 
 }
