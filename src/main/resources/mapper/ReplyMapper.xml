@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.qf.dao.ReplyMapper">
+    <resultMap id="replyList" type="com.qf.vo.ReplyVO">
+        <id property="repId" column="rep_id"/>
+        <result property="comId" column="com_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="icon" column="icon"/>
+        <result property="crepId" column="crep_id"/>
+        <result property="cuserId" column="cuser_id"/>
+        <result property="cnickName" column="cnick_name"/>
+        <result property="ccontent"  column="ccontent"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    <select id="getReplyByComId" parameterType="long" resultMap="replyList">
+    SELECT tb2.*,u.icon icon from (SELECT tb1.*,tb2.rep_id crep_id,tb2.user_id cuser_id,
+    tb2.nick_name cnick_name,tb2.content ccontent
+    from (select * from reply ) tb1 left join
+    (select * from reply ) tb2 on tb2.rep_id=tb1.parent_id
+    where tb1.com_id=#{comId} and tb1.status=1) tb2 left JOIN
+		userinfo u on tb2.user_id=u.userId
+</select>
+    <insert id="addReplyByReplyInfo" parameterType="com.qf.pojo.ReplyInfo">
+        insert into reply (com_id,user_id,nick_name,parent_id,content,status,create_time)
+        values (#{comId},#{userId},#{nickName},#{repId},#{content},1,CURRENT_TIMESTAMP)
+    </insert>
+    <update id="deleteReplyByRepId" parameterType="long">
+        update reply set status =0  where rep_id=#{repId};
+    </update>
+</mapper>
